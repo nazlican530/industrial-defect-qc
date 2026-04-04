@@ -1,0 +1,19 @@
+===== EVALUATION METRICS =====
+Accuracy: 0.9954
+Precision: 0.9955
+Recall: 0.9954
+F1 Score: 0.9954
+
+Classification Report:
+                 precision    recall  f1-score   support
+
+        crazing       1.00      1.00      1.00        36
+      inclusion       0.97      1.00      0.99        36
+        patches       1.00      1.00      1.00        36
+ pitted_surface       1.00      1.00      1.00        36
+rolled-in_scale       1.00      1.00      1.00        36
+      scratches       1.00      0.97      0.99        36
+
+       accuracy                           1.00       216
+      macro avg       1.00      1.00      1.00       216
+   weighted avg       1.00      1.00      1.00       216
