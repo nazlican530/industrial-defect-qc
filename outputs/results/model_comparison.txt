@@ -1,0 +1,15 @@
+MODEL COMPARISON RESULTS
+============================================================
+Model                Accuracy   Precision  Recall     F1-score  
+-----------------------------------------------------------------
+efficientnet_b0      0.9259     0.9366     0.9259     0.9266    
+resnet50             0.7454     0.8463     0.7454     0.7326    
+
+BEST MODEL SELECTION
+============================================================
+Best Model: efficientnet_b0
+Checkpoint: outputs/models/best_model.pt
+Accuracy: 0.9259
+Precision: 0.9366
+Recall: 0.9259
+F1-score: 0.9266

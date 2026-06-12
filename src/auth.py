@@ -51,11 +51,11 @@ class TokenResponse(BaseModel):
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
 
-
+# Parolayı doğrulamak için kullanılır
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
-
+ # JWT token oluşturmak için kullanılır
 def create_access_token(data: dict, expires_delta: timedelta | None = None) -> str:
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + (
@@ -83,7 +83,7 @@ def to_public_upload_path(path_value):
     filename = Path(path_str).name
     return f"/uploads/{filename}"
 
-
+ # Kullanıcı verilerini frontend için temizler, hassas bilgileri kaldırır ve profil resim yolunu düzenler
 def sanitize_user(user: dict):
     if not user:
         return None

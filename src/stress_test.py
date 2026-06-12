@@ -14,10 +14,15 @@ num_classes = len(class_to_idx)
 
 test_dir = "data/NEU-DET/test/images"
 
-base_tf = transforms.Compose([
+to_tensor = transforms.Compose([
     transforms.Resize((224, 224)),
     transforms.ToTensor(),
 ])
+
+normalize = transforms.Normalize(
+    mean=[0.485, 0.456, 0.406],
+    std=[0.229, 0.224, 0.225]
+)
 
 class StressTransform:
     def __init__(self, intensity=0.3):
@@ -27,38 +32,46 @@ class StressTransform:
         img = img.convert("RGB")
 
         # Blur
-        if random.random() < 0.7:
+        if self.intensity > 0 and random.random() < 0.7:
             radius = self.intensity * 2
             img = img.filter(ImageFilter.GaussianBlur(radius))
 
         # Brightness
-        if random.random() < 0.7:
+        if self.intensity > 0 and random.random() < 0.7:
             factor = 1 + random.uniform(-0.4, 0.4) * self.intensity
             img = ImageEnhance.Brightness(img).enhance(factor)
 
-        x = base_tf(img)
+        x = to_tensor(img)
 
         # Gaussian noise
-        if random.random() < 0.7:
+        if self.intensity > 0 and random.random() < 0.7:
             noise = torch.randn_like(x) * (0.2 * self.intensity)
             x = torch.clamp(x + noise, 0, 1)
 
-        return x
+        x = normalize(x)
 
+        return x
+ # evaluate de bunu kullanarak farklı stres seviyelerinde model performansını ölçüyoruz
 def evaluate(intensity):
     tf = StressTransform(intensity=intensity)
     ds = datasets.ImageFolder(test_dir, transform=tf)
     loader = DataLoader(ds, batch_size=64, shuffle=False, num_workers=0)
 
-    model = models.resnet18(weights=None)
-    model.fc = nn.Linear(model.fc.in_features, num_classes)
+    model = models.efficientnet_b0(weights=None)
+
+    in_features = model.classifier[1].in_features
+    model.classifier[1] = nn.Sequential(
+        nn.Dropout(p=0.2, inplace=True),
+        nn.Linear(in_features, num_classes)
+    )
+
     model.load_state_dict(ckpt["model_state"])
     model.to(device)
     model.eval()
 
     y_true, y_pred = [], []
 
-    with torch.no_grad():
+    with torch.no_grad(): # “gradient hesaplama, sadece sonucu ver”
         for x, y in loader:
             x = x.to(device)
             logits = model(x)

@@ -25,9 +25,9 @@ def generate_gradcam(model, input_tensor, target_layer, original_image_path):
 
     grad = gradients[0]
     act = activations[0]
-
+     # her kanal için gradyanların H,W boyutları boyunca ortalamasını alarak kanal ağırlıklarını hesaplıyoruz. Bu ağırlıklar, her kanalın sınıf skoruna ne kadar katkıda bulunduğunu gösterir. Daha sonra, bu ağırlıkları aktivasyonlarla çarparak sınıfın hangi bölgelere dikkat ettiğini gösteren bir ısı haritası (heatmap) oluştururuz.
     weights = grad.mean(dim=(2, 3), keepdim=True)
-    cam = (weights * act).sum(dim=1).squeeze()
+    cam = (weights * act).sum(dim=1).squeeze() # Aktivasyonları ağırlıklarla çarpar, toplar.
 
     cam = torch.relu(cam)
     cam = cam.detach().cpu().numpy()
@@ -41,9 +41,9 @@ def generate_gradcam(model, input_tensor, target_layer, original_image_path):
     original = cv2.imread(str(original_image_path))
     original = cv2.resize(original, (224, 224))
 
-    overlay = cv2.addWeighted(original, 0.6, heatmap, 0.4, 0)
+    overlay = cv2.addWeighted(original, 0.6, heatmap, 0.4, 0) # %60 orijinal görüntü, %40 ısı haritası
 
-    handle_f.remove()
+    handle_f.remove() # hook'ları kaldırarak bellek sızıntısını önlüyoruz. Hook'lar, modelin belirli katmanlarına bağlanarak o katmanın girişlerini, çıkışlarını veya gradyanlarını kaydetmemizi sağlar. Ancak, bu hook'lar modelin normal çalışmasını etkileyebilir ve gereksiz yere bellekte kalabilirler. Bu yüzden, işimiz bittiğinde bu hook'ları kaldırmak önemlidir.
     handle_b.remove()
 
     return overlay
