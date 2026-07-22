@@ -111,7 +111,7 @@ def format_topk(prob_vector, class_names, k=3):
 
 def evaluate(ckpt_path, save_confusion=True, print_misclassified=True, max_print=50):
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    test_dir = "data/NEU-DET/test/images"
+    test_dir = "data/NEU-DET/split_1800/test/images"
 
     base_ds = datasets.ImageFolder(test_dir)
     print("\n[INFO] Dataset classes:", base_ds.classes)
@@ -279,8 +279,8 @@ def print_best_model(results):
 
 if __name__ == "__main__":
     checkpoint_paths = [
-        "outputs/models/best_model.pt",
-        "outputs/models/resnet50_best.pt",
+        "outputs/models/best_model_1800.pt",
+        "outputs/models/resnet50_best_1800.pt",
     ]
 
     results = []

@@ -1,0 +1,56 @@
+EXACT MCNEMAR TEST
+======================================================================
+Evaluation set: Independent test set
+Significance level: 0.05
+Method: Exact two-sided McNemar test
+
+Model A: mobilenet_v3_large
+Model B: densenet121
+Model A accuracy: 0.992593
+Model B accuracy: 0.988889
+
+CONTINGENCY TABLE
+----------------------------------------------------------------------
+Both models correct: 265
+Model A correct, Model B wrong (b): 3
+Model A wrong, Model B correct (c): 2
+Both models wrong: 0
+Discordant pairs: 5
+
+Continuity-corrected statistic: 0.000000
+Exact two-sided p-value: 1.000000
+
+Conclusion: The difference between the models is not statistically significant.
+
+DISCORDANT TEST SAMPLES
+======================================================================
+
+Sample 1
+Image: data/NEU-DET/split_1799/test/images/crazing/crazing_012.jpg
+True class: crazing
+mobilenet_v3_large prediction: crazing (correct=True)
+densenet121 prediction: patches (correct=False)
+
+Sample 2
+Image: data/NEU-DET/split_1799/test/images/crazing/crazing_045.jpg
+True class: crazing
+mobilenet_v3_large prediction: crazing (correct=True)
+densenet121 prediction: patches (correct=False)
+
+Sample 3
+Image: data/NEU-DET/split_1799/test/images/inclusion/inclusion_022.jpg
+True class: inclusion
+mobilenet_v3_large prediction: pitted_surface (correct=False)
+densenet121 prediction: inclusion (correct=True)
+
+Sample 4
+Image: data/NEU-DET/split_1799/test/images/inclusion/inclusion_037.jpg
+True class: inclusion
+mobilenet_v3_large prediction: inclusion (correct=True)
+densenet121 prediction: scratches (correct=False)
+
+Sample 5
+Image: data/NEU-DET/split_1799/test/images/scratches/scratches_027.jpg
+True class: scratches
+mobilenet_v3_large prediction: inclusion (correct=False)
+densenet121 prediction: scratches (correct=True)

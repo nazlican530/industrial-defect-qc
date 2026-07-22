@@ -1,6 +1,9 @@
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 import uuid
+import os
+
+from dotenv import load_dotenv
 
 from fastapi import (
     APIRouter,
@@ -19,7 +22,8 @@ from pydantic import BaseModel, EmailStr
 from src.database import users_collection
 
 
-SECRET_KEY = "change-this-secret-key-in-production"
+load_dotenv()
+SECRET_KEY = os.getenv("SECRET_KEY", "change-this-secret-key-in-production")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # 7 gün
 

@@ -1,0 +1,12 @@
+===== LLM VALIDATION SUMMARY =====
+Total reports:          100
+Validated reports:      100
+Fallback reports:       0
+LLM failures:           0
+Validation pass rate:   100.00%
+Fallback rate:          0.00%
+LLM failure rate:       0.00%
+Mean latency:           1.6649 s
+Median latency:         2.2668 s
+Latency std.:           0.9623 s
+Validation errors:      {}

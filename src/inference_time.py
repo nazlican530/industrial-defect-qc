@@ -2,62 +2,88 @@ import torch
 import time
 import os
 import random
+import psutil
 from torchvision import transforms, models
 from PIL import Image
 
-# Modeli oluşturuyorum
-model = models.efficientnet_b0(weights=None)
+# -------------------------------------------------
+# Model
+# -------------------------------------------------
+model = models.mobilenet_v3_large(weights=None)
 
-# Son katmanı 6 sınıfa göre ayarlıyorum
-model.classifier[1] = torch.nn.Linear(
-    model.classifier[1].in_features, 6
+model.classifier[3] = torch.nn.Linear(
+    model.classifier[3].in_features,
+    6
 )
 
-# Eğitilmiş modeli yüklüyorum
 checkpoint = torch.load(
-    "outputs/models/best_model.pt",
+    "outputs/models/best_model_mobilenetv3.pt",
     map_location="cpu"
 )
 
 state = checkpoint["model_state"] if "model_state" in checkpoint else checkpoint
-
-# Kaydedilen ağırlıkları modele aktarıyorum
 model.load_state_dict(state, strict=False)
+
 model.eval()
 
-# Görüntüyü modele uygun hale getirmek için dönüşümler
+# -------------------------------------------------
+# Image preprocessing (same as training/inference)
+# -------------------------------------------------
 transform = transforms.Compose([
     transforms.Resize((224, 224)),
-    transforms.ToTensor()
+    transforms.ToTensor(),
+    transforms.Normalize(
+        mean=[0.485, 0.456, 0.406],
+        std=[0.229, 0.224, 0.225]
+    )
 ])
 
-# Test klasöründen rastgele bir scratches görüntüsü seçiyorum
-folder = "data/NEU-DET/test/images/scratches"
+folder = "data/NEU-DET/split_1799/test/images/scratches"
 
-image_name = random.choice(os.listdir(folder))
-image_path = os.path.join(folder, image_name)
+image_path = os.path.join(
+    folder,
+    random.choice(os.listdir(folder))
+)
 
-print("Seçilen görüntü:", image_path)
+print("Selected image:", image_path)
 
-# Görüntüyü açıp modele vereceğim formata çeviriyorum
 image = Image.open(image_path).convert("RGB")
 image = transform(image).unsqueeze(0)
 
-# Çıkarım süresini ölçmek için aynı görüntüyü 50 kez çalıştırıyorum
-runs = 50
+# -------------------------------------------------
+# Warm-up
+# -------------------------------------------------
+with torch.no_grad():
+    for _ in range(10):
+        model(image)
 
-start = time.time()
+# -------------------------------------------------
+# Inference Benchmark
+# -------------------------------------------------
+runs = 100
+
+start = time.perf_counter()
 
 with torch.no_grad():
     for _ in range(runs):
-        _ = model(image)
+        model(image)
 
-end = time.time()
+end = time.perf_counter()
 
-# Ortalama çıkarım süresini hesaplıyorum
 avg_time = (end - start) / runs
+fps = 1 / avg_time
 
-# Sonuçları ekrana yazdırıyorum
-print("\n--- SONUÇLAR ---")
-print("Bir görüntü için ortalama çıkarım süresi:", round(avg_time, 5), "saniye")
-print("Yaklaşık FPS:", round(1 / avg_time, 2))
+# -------------------------------------------------
+# RAM Usage
+# -------------------------------------------------
+process = psutil.Process(os.getpid())
+ram = process.memory_info().rss / (1024 * 1024)
+
+# -------------------------------------------------
+# Results
+# -------------------------------------------------
+print("\n========== PERFORMANCE BENCHMARK ==========")
+print(f"Average inference time : {avg_time:.5f} seconds")
+print(f"Throughput (FPS)       : {fps:.2f}")
+print(f"RAM usage              : {ram:.2f} MB")
+print("===========================================")

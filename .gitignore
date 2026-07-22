@@ -1,0 +1,37 @@
+# macOS
+.DS_Store
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Dataset images
+data/
+
+# Application-generated uploads
+uploads/
+
+# Large model checkpoints
+outputs/models/
+*.pt
+*.pth
+*.ckpt
+
+# Temporary archives
+*.zip
+
+# Temporary and backup files
+*_backup.*
+*_before_cleanup.*
+*.tmp

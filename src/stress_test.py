@@ -6,14 +6,28 @@ from sklearn.metrics import classification_report
 from PIL import Image, ImageFilter, ImageEnhance
 import random
 
-device = "cuda" if torch.cuda.is_available() else "cpu"
+device = "mps" if torch.backends.mps.is_available() else (
+    "cuda" if torch.cuda.is_available() else "cpu"
+)
 
-ckpt = torch.load("outputs/models/best_model.pt", map_location="cpu")
+# ==========================
+# CHECKPOINT
+# ==========================
+CHECKPOINT = "outputs/models/best_model_mobilenetv3.pt"
+
+ckpt = torch.load(CHECKPOINT, map_location="cpu")
+
 class_to_idx = ckpt["class_to_idx"]
 num_classes = len(class_to_idx)
 
-test_dir = "data/NEU-DET/test/images"
+# ==========================
+# DATASET
+# ==========================
+test_dir = "data/NEU-DET/split_1799/test/images"
 
+# ==========================
+# TRANSFORMS
+# ==========================
 to_tensor = transforms.Compose([
     transforms.Resize((224, 224)),
     transforms.ToTensor(),
@@ -31,19 +45,17 @@ class StressTransform:
     def __call__(self, img: Image.Image):
         img = img.convert("RGB")
 
-        # Blur
         if self.intensity > 0 and random.random() < 0.7:
-            radius = self.intensity * 2
-            img = img.filter(ImageFilter.GaussianBlur(radius))
+            img = img.filter(
+                ImageFilter.GaussianBlur(self.intensity * 2)
+            )
 
-        # Brightness
         if self.intensity > 0 and random.random() < 0.7:
             factor = 1 + random.uniform(-0.4, 0.4) * self.intensity
             img = ImageEnhance.Brightness(img).enhance(factor)
 
         x = to_tensor(img)
 
-        # Gaussian noise
         if self.intensity > 0 and random.random() < 0.7:
             noise = torch.randn_like(x) * (0.2 * self.intensity)
             x = torch.clamp(x + noise, 0, 1)
@@ -51,40 +63,79 @@ class StressTransform:
         x = normalize(x)
 
         return x
- # evaluate de bunu kullanarak farklı stres seviyelerinde model performansını ölçüyoruz
-def evaluate(intensity):
-    tf = StressTransform(intensity=intensity)
-    ds = datasets.ImageFolder(test_dir, transform=tf)
-    loader = DataLoader(ds, batch_size=64, shuffle=False, num_workers=0)
 
-    model = models.efficientnet_b0(weights=None)
 
-    in_features = model.classifier[1].in_features
-    model.classifier[1] = nn.Sequential(
-        nn.Dropout(p=0.2, inplace=True),
-        nn.Linear(in_features, num_classes)
+def build_model():
+
+    model = models.mobilenet_v3_large(weights=None)
+
+    in_features = model.classifier[-1].in_features
+
+    model.classifier[-1] = nn.Linear(
+        in_features,
+        num_classes
     )
 
     model.load_state_dict(ckpt["model_state"])
+
     model.to(device)
     model.eval()
 
-    y_true, y_pred = [], []
+    return model
 
-    with torch.no_grad(): # “gradient hesaplama, sadece sonucu ver”
+
+def evaluate(intensity):
+
+    tf = StressTransform(intensity)
+
+    ds = datasets.ImageFolder(
+        test_dir,
+        transform=tf
+    )
+
+    loader = DataLoader(
+        ds,
+        batch_size=64,
+        shuffle=False,
+        num_workers=0
+    )
+
+    model = build_model()
+
+    y_true = []
+    y_pred = []
+
+    with torch.no_grad():
+
         for x, y in loader:
+
             x = x.to(device)
+
             logits = model(x)
+
             pred = logits.argmax(dim=1).cpu().tolist()
+
             y_pred.extend(pred)
             y_true.extend(y.tolist())
 
-    print(f"\n=== STRESS TEST (intensity={intensity}) ===")
-    print(classification_report(y_true, y_pred, target_names=ds.classes, zero_division=0))
+    print(f"\n========== STRESS TEST intensity={intensity} ==========\n")
+
+    print(
+        classification_report(
+            y_true,
+            y_pred,
+            target_names=ds.classes,
+            digits=4,
+            zero_division=0
+        )
+    )
+
 
 def main():
+
     for intensity in [0.0, 0.3, 0.6, 0.9]:
         evaluate(intensity)
+
 
 if __name__ == "__main__":
     main()

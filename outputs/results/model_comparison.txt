@@ -1,15 +1,25 @@
 MODEL COMPARISON RESULTS
-============================================================
-Model                Accuracy   Precision  Recall     F1-score  
------------------------------------------------------------------
-efficientnet_b0      0.9259     0.9366     0.9259     0.9266    
-resnet50             0.7454     0.8463     0.7454     0.7326    
+================================================================================
+Model                Correct      Accuracy   Precision  Recall     F1-score  
+--------------------------------------------------------------------------------
+efficientnet_b0      257/270      0.9519     0.9563     0.9519     0.9516    
+resnet50             215/270      0.7963     0.6943     0.7963     0.7324    
+densenet121          267/270      0.9889     0.9893     0.9889     0.9889    
+mobilenet_v3_large   268/270      0.9926     0.9927     0.9926     0.9926    
+
+95% BOOTSTRAP CONFIDENCE INTERVALS
+================================================================================
+efficientnet_b0: Accuracy 0.9519 [0.9259-0.9778], Macro F1 0.9516 [0.9241-0.9757]
+resnet50: Accuracy 0.7963 [0.7481-0.8444], Macro F1 0.7324 [0.7018-0.7586]
+densenet121: Accuracy 0.9889 [0.9741-1.0000], Macro F1 0.9889 [0.9746-1.0000]
+mobilenet_v3_large: Accuracy 0.9926 [0.9815-1.0000], Macro F1 0.9926 [0.9806-1.0000]
 
 BEST MODEL SELECTION
-============================================================
-Best Model: efficientnet_b0
-Checkpoint: outputs/models/best_model.pt
-Accuracy: 0.9259
-Precision: 0.9366
-Recall: 0.9259
-F1-score: 0.9266
+================================================================================
+Best Model: mobilenet_v3_large
+Checkpoint: outputs/models/best_model_mobilenetv3.pt
+Correct: 268/270
+Accuracy: 0.9926
+Precision: 0.9927
+Recall: 0.9926
+F1-score: 0.9926

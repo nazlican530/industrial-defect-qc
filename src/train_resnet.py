@@ -32,8 +32,8 @@ def main() -> None:
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print("Device:", device)
 
-    train_dir = "data/NEU-DET/train/images"
-    val_dir = "data/NEU-DET/validation/images"
+    train_dir = "data/NEU-DET/split_1799/train/images"
+    val_dir = "data/NEU-DET/split_1799/validation/images"
 
     model_out_dir = Path("outputs/models")
     model_out_dir.mkdir(parents=True, exist_ok=True)
@@ -41,7 +41,7 @@ def main() -> None:
     fig_out_dir = Path("outputs/figures")
     fig_out_dir.mkdir(parents=True, exist_ok=True)
 
-    ckpt_path = model_out_dir / "resnet50_best.pt"
+    ckpt_path = model_out_dir / "resnet50_best_1800.pt"
 
     
     # Fair Train / Val Transforms

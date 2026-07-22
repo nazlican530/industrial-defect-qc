@@ -1,0 +1,8 @@
+CALIBRATION METRICS ON THE INDEPENDENT TEST SET
+ECE: top-label ECE, 15 equal-width bins
+Brier: multiclass mean sum of squared probability errors
+
+efficientnet_b0: Accuracy=0.9519, MeanConfidence=0.6691, ECE=0.2827, Brier=0.2141
+resnet50: Accuracy=0.7963, MeanConfidence=0.7186, ECE=0.1106, Brier=0.2737
+densenet121: Accuracy=0.9889, MeanConfidence=0.8949, ECE=0.0971, Brier=0.0340
+mobilenet_v3_large: Accuracy=0.9926, MeanConfidence=0.8001, ECE=0.1946, Brier=0.0656

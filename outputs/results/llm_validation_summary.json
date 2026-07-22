@@ -1,0 +1,13 @@
+{
+  "total_reports": 100,
+  "validated_reports": 100,
+  "fallback_reports": 0,
+  "llm_failures": 0,
+  "validation_pass_rate_percent": 100.0,
+  "fallback_rate_percent": 0.0,
+  "llm_failure_rate_percent": 0.0,
+  "mean_latency_seconds": 1.6649,
+  "median_latency_seconds": 2.2668,
+  "latency_std_seconds": 0.9623,
+  "validation_error_counts": {}
+}

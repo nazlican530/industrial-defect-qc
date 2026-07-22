@@ -46,7 +46,7 @@ def main() -> None:
     print(" MODEL: EfficientNet")
 
     #  Test data 
-    test_dir = "data/NEU-DET/test/images"
+    test_dir = "data/NEU-DET/split_1800/test/images"
 
     transform = transforms.Compose([
         transforms.Resize((224, 224)),
