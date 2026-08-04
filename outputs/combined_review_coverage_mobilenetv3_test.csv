@@ -1,0 +1,13 @@
+metric,value
+Total test samples,270.0
+Confidence < 0.90,237.0
+Top-2 margin < 0.10,4.0
+Both low confidence and low margin,4.0
+Confidence-only review,233.0
+Margin-only review,0.0
+Combined HUMAN REVIEW,237.0
+Automatic severity-based decision,33.0
+Review coverage (%),87.78
+Automatic coverage (%),12.22
+Accuracy among reviewed samples (%),99.16
+Accuracy among automatic samples (%),100.0

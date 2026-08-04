@@ -1,0 +1,147 @@
+# main.py içinde aşağıdaki bölümleri değiştir.
+
+# 1) Yeni import:
+from src.llm_validation_utils import validate_llm_report
+
+
+# 2) Eşikler:
+CALIBRATION_THRESHOLD = 0.90
+TOP2_UNCERTAINTY_MARGIN = 0.10
+
+
+# 3) quality_decision fonksiyonunun tamamı:
+def quality_decision(
+    defect_class: str,
+    confidence: float,
+    uncertainty_flag: bool = False,
+) -> tuple[str, str]:
+    """
+    Decision logic aligned with Algorithm 1.
+
+    Rules:
+    1. If the Top-2 probability gap is below 0.10, route to HUMAN REVIEW.
+    2. If confidence is below 0.90, route to HUMAN REVIEW.
+    3. Otherwise apply the predefined severity-based decision:
+       - Low severity    -> ACCEPT
+       - Medium severity -> REWORK
+       - High severity   -> REJECT
+    """
+    severity = severity_score(defect_class)
+
+    if uncertainty_flag:
+        return "HUMAN REVIEW", severity
+
+    if confidence < CALIBRATION_THRESHOLD:
+        return "HUMAN REVIEW", severity
+
+    if severity == "Low":
+        return "ACCEPT", severity
+
+    if severity == "Medium":
+        return "REWORK", severity
+
+    if severity == "High":
+        return "REJECT", severity
+
+    return "HUMAN REVIEW", severity
+
+
+# 4) production_impact fonksiyonuna HUMAN REVIEW ekle:
+def production_impact(
+    decision: str,
+    defect_class: str,
+    severity: str,
+) -> str:
+    if decision == "HUMAN REVIEW":
+        return "Pending operator verification"
+
+    if decision == "REJECT":
+        return "High"
+
+    if decision == "REWORK":
+        if severity == "High":
+            return "Moderate to High"
+        if severity == "Medium":
+            return "Moderate"
+        return "Low to Moderate"
+
+    if decision == "ACCEPT":
+        if defect_class == "scratches":
+            return "Minimal"
+        return "Low"
+
+    return "Unknown"
+
+
+# 5) build_fallback_report içindeki action_text bölümünü değiştir:
+if decision == "HUMAN REVIEW":
+    action_text = (
+        "The prediction does not satisfy the automation criteria. "
+        "Operator verification is required before an ACCEPT, REWORK, "
+        "or REJECT action is assigned."
+    )
+elif decision == "REWORK":
+    action_text = (
+        "The product should be rechecked or reworked before approval."
+    )
+elif decision == "REJECT":
+    action_text = (
+        "The product should be rejected according to the configured "
+        "defect-severity rules."
+    )
+else:
+    action_text = "The product can be accepted under the configured rules."
+
+
+# 6) LLM validation çağrısını değiştir:
+validation_errors = validate_llm_report(
+    report=llm_report,
+    defect_class=defect_class,
+    confidence=confidence,
+    severity=severity,
+    decision=decision,
+)
+
+
+# 7) /metrics yanıtında:
+"decision_classes": [
+    "ACCEPT",
+    "REWORK",
+    "REJECT",
+    "HUMAN REVIEW",
+],
+
+
+# 8) thresholds içinde REWORK_THRESHOLD alanını kaldır:
+"thresholds": {
+    "automation_threshold": CALIBRATION_THRESHOLD,
+    "top2_uncertainty_margin": TOP2_UNCERTAINTY_MARGIN,
+},
+
+
+# 9) analytics pipeline içine human_review_count ekle:
+"human_review_count": {
+    "$size": {
+        "$filter": {
+            "input": "$decisions",
+            "as": "d",
+            "cond": {"$eq": ["$$d", "HUMAN REVIEW"]},
+        }
+    }
+},
+
+
+# 10) totals bölümüne ekle:
+total_human_review = sum(
+    item.get("human_review_count", 0)
+    for item in stats
+)
+
+
+# 11) decision_overview yanıtını değiştir:
+"decision_overview": {
+    "accept": total_accept,
+    "rework": total_rework,
+    "reject": total_reject,
+    "human_review": total_human_review,
+},

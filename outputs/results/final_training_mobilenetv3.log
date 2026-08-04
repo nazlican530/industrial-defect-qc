@@ -1,0 +1,7 @@
+Device: mps
+Classes: ['crazing', 'inclusion', 'patches', 'pitted_surface', 'rolled-in_scale', 'scratches']
+class_to_idx: {'crazing': 0, 'inclusion': 1, 'patches': 2, 'pitted_surface': 3, 'rolled-in_scale': 4, 'scratches': 5}
+Train images: 1259
+Validation images: 270
+Class weights: tensor([0.0048, 0.0048, 0.0048, 0.0048, 0.0048, 0.0048], device='mps:0')
+Epoch 1/12:   0%|          | 0/40 [00:00<?, ?it/s]Epoch 1/12:   0%|          | 0/40 [00:04<?, ?it/s, loss=1.8216]Epoch 1/12:   2%|▎         | 1/40 [00:04<03:12,  4.94s/it, loss=1.8216]

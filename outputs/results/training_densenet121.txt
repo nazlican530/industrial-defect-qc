@@ -1,0 +1,31 @@
+===== DENSENET121 TRAINING RESULTS =====
+
+Model: densenet121
+Device: mps
+Classes: ['crazing', 'inclusion', 'patches', 'pitted_surface', 'rolled-in_scale', 'scratches']
+Seed: 42
+Batch size: 32
+Learning rate: 5e-05
+Weight decay: 0.0005
+Maximum epochs: 12
+Completed epochs: 12
+Best epoch: 10
+Best validation loss: 0.333525
+Best validation accuracy: 0.881481
+Training duration: 343.31 seconds
+Checkpoint: outputs/models/best_model_densenet121.pt
+Training figure: outputs/figures/training_densenet121.png
+
+===== EPOCH HISTORY =====
+Epoch 01 | Train Loss: 1.450783 | Train Acc: 0.430952 | Val Loss: 1.207042 | Val Acc: 0.603704
+Epoch 02 | Train Loss: 0.897249 | Train Acc: 0.573810 | Val Loss: 0.671710 | Val Acc: 0.688889
+Epoch 03 | Train Loss: 0.774366 | Train Acc: 0.553175 | Val Loss: 0.523839 | Val Acc: 0.870370
+Epoch 04 | Train Loss: 0.523640 | Train Acc: 0.775397 | Val Loss: 0.516577 | Val Acc: 0.692593
+Epoch 05 | Train Loss: 0.467621 | Train Acc: 0.786508 | Val Loss: 0.708733 | Val Acc: 0.577778
+Epoch 06 | Train Loss: 0.612153 | Train Acc: 0.667460 | Val Loss: 0.381449 | Val Acc: 0.796296
+Epoch 07 | Train Loss: 0.731096 | Train Acc: 0.526190 | Val Loss: 0.440475 | Val Acc: 0.796296
+Epoch 08 | Train Loss: 0.559768 | Train Acc: 0.710317 | Val Loss: 0.369187 | Val Acc: 0.900000
+Epoch 09 | Train Loss: 0.460023 | Train Acc: 0.788095 | Val Loss: 0.367709 | Val Acc: 0.859259
+Epoch 10 | Train Loss: 0.383200 | Train Acc: 0.839683 | Val Loss: 0.333525 | Val Acc: 0.881481
+Epoch 11 | Train Loss: 0.345891 | Train Acc: 0.882540 | Val Loss: 0.397920 | Val Acc: 0.925926
+Epoch 12 | Train Loss: 0.331483 | Train Acc: 0.908730 | Val Loss: 0.422981 | Val Acc: 0.859259

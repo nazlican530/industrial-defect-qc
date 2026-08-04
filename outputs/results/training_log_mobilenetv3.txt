@@ -1,0 +1,8 @@
+Model : MobileNetV3-Large
+Epochs : 12
+Batch Size : 32
+Learning Rate : 5e-05
+Weight Decay : 0.0005
+Training Time : 269.59
+Test Accuracy : 1.0000
+Checkpoint : /Users/macairm/Desktop/industrial-defect-qc-1800/outputs/models/best_model_mobilenetv3.pt

@@ -1,0 +1,4 @@
+confidence_range,sample_count,average_confidence,accuracy,percentage,decision_rule
+< 0.60,105,37.73,84.76,48.61,REJECT
+0.60-0.89,82,74.76,100.0,37.96,REWORK
+>= 0.90,29,93.5,100.0,13.43,Severity-based decision

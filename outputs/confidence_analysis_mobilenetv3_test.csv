@@ -1,0 +1,4 @@
+confidence_range,sample_count,average_confidence,accuracy,percentage,decision_rule
+< 0.60,14,50.61,85.71,5.19,HUMAN REVIEW
+0.60-0.89,223,79.92,100.0,82.59,HUMAN REVIEW
+>= 0.90,33,93.1,100.0,12.22,Subject to Top-2 margin check; otherwise severity-based
