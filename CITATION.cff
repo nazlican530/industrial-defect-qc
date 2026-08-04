@@ -1,0 +1,39 @@
+cff-version: 1.2.0
+title: "RobustDefect-LLM: Explainable and Robustness-Aware Industrial Surface Defect Classification with Decision Support and AI-Assisted Reporting"
+
+message: "If you use this repository, please cite the associated paper."
+
+type: software
+
+authors:
+  - family-names: "Düşünmez"
+    given-names: "Nazlıcan"
+    affiliation: "Department of Computer Engineering, İstanbul Arel University"
+
+  - family-names: "Gümüşkaya"
+    given-names: "Halûk"
+    affiliation: "Department of Computer Engineering, İstanbul Arel University"
+
+repository-code: "https://github.com/nazlican530/industrial-defect-qc"
+
+keywords:
+  - industrial inspection
+  - surface defect detection
+  - computer vision
+  - explainable AI
+  - Grad-CAM
+  - MobileNetV3
+  - deep learning
+  - quality control
+  - LLM
+
+license: MIT
+
+version: "1.0"
+
+commit: "315b5ad51781e46388508f866d3ea4e6f5828999"
+
+abstract: >
+  RobustDefect-LLM is an explainable and robustness-aware industrial surface
+  defect inspection framework integrating transfer learning, Grad-CAM,
+  confidence-aware decision support, and controlled LLM-assisted reporting.
